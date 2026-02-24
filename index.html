@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitTrack — Your Personal Fitness Planner</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="#" class="brand">FitTrack</a>
+      <img src="assets/logo.png" alt="Youth College International" class="logo" />
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="hero">
+      <h1>Your journey to a stronger you starts here</h1>
+      <p class="tagline">Enter your details, get a personalized plan, and move with confidence—at the park or at home.</p>
+    </section>
+
+    <section class="section card" id="dashboard">
+      <h2>Your dashboard</h2>
+      <p class="section-desc">Overview of generated electricity and estimated earnings.</p>
+
+      <div class="energy-dashboard">
+        <div class="energy-stats">
+          <div class="energy-value" id="energy-value">0 Wh</div>
+          <div class="energy-money" id="energy-money">$0.00</div>
+        </div>
+
+        <div class="energy-bar" id="energy-bar" data-max="10000" aria-hidden="false">
+          <div class="energy-bar-fill" id="energy-bar-fill" style="width: 0%;"></div>
+        </div>
+
+        <div class="energy-controls">
+          <label for="energy-input">Enter generated energy (Wh)</label>
+          <input type="number" id="energy-input" min="0" value="0" />
+          <button class="btn btn-primary" id="energy-update">Update</button>
+          <small class="energy-note">Rate: 1000 Wh = $10</small>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1. User data input -->
+    <section class="section card" id="user-data">
+      <h2>Your profile</h2>
+      <p class="section-desc">Help us tailor your plan by sharing a few numbers. We use these to suggest intensity and focus areas.</p>
+      <form class="profile-form" id="profile-form">
+        <div class="form-row">
+          <label for="weight">Weight (kg)</label>
+          <input type="text" inputmode="decimal" id="weight" name="weight" placeholder="e.g. 70" required autocomplete="off">
+        </div>
+        <div class="form-row">
+          <label for="bodyfat">Body fat (%)</label>
+          <input type="text" inputmode="decimal" id="bodyfat" name="bodyfat" placeholder="e.g. 18" autocomplete="off">
+        </div>
+        <div class="form-row">
+          <label for="height">Height (cm)</label>
+          <input type="text" inputmode="decimal" id="height" name="height" placeholder="e.g. 175" required autocomplete="off">
+        </div>
+        <div class="form-row">
+          <label for="age">Age</label>
+          <input type="text" inputmode="numeric" id="age" name="age" placeholder="e.g. 28" required autocomplete="off">
+        </div>
+        <button type="submit" class="btn btn-primary">Save profile & continue</button>
+      </form>
+    </section>
+
+    <!-- 2. AI body & face scan -->
+    <section class="section card" id="camera-section">
+      <h2>AI health scan</h2>
+      <p class="section-desc">Start the camera, then click "Get facial score" to analyze your face. The score is used to refine your workout plan.</p>
+      <div class="camera-layout">
+        <div class="camera-placeholder" id="camera-view">
+          <video id="camera-video" class="camera-video hidden" autoplay playsinline muted></video>
+          <canvas id="camera-canvas" class="hidden" width="640" height="480"></canvas>
+          <span class="placeholder-icon" id="placeholder-icon">📷</span>
+          <span class="placeholder-text" id="placeholder-text">Camera feed — AI body & face scan</span>
+          <span class="placeholder-hint" id="placeholder-hint">Click "Start scan" to turn on your camera, then "Get facial score" to analyze.</span>
+        </div>
+        <div class="camera-controls">
+          <button type="button" class="btn btn-secondary" id="btn-camera-start">Start scan</button>
+          <button type="button" class="btn btn-secondary" id="btn-camera-stop" disabled>Stop scan</button>
+          <button type="button" class="btn btn-primary" id="btn-get-score" disabled>Get facial score</button>
+        </div>
+        <div class="ai-estimate-panel" id="ai-estimate-panel">
+          <h3>Estimated health data (from AI)</h3>
+          <p class="ai-estimate-desc">Results appear here after a scan. These estimates improve plan generation.</p>
+          <div class="ai-estimate-grid" id="ai-estimate-grid">
+            <div class="ai-estimate-item"><span class="label">Facial score</span><span class="value" id="ai-facial-score">—</span></div>
+            <div class="ai-estimate-item"><span class="label">Est. body fat %</span><span class="value" id="ai-bodyfat">—</span></div>
+            <div class="ai-estimate-item"><span class="label">Est. posture / build</span><span class="value" id="ai-posture">—</span></div>
+            <div class="ai-estimate-item"><span class="label">Est. age range</span><span class="value" id="ai-age">—</span></div>
+            <div class="ai-estimate-item"><span class="label">Other metrics</span><span class="value" id="ai-other">—</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Preference & plan generation -->
+    <section class="section card" id="plan-section">
+      <h2>Your exercise plan</h2>
+      <p class="section-desc">Choose how you like to train. We'll generate a plan using your profile, any AI health estimates, and your preference.</p>
+
+      <div class="preference-group">
+        <p class="preference-label">I want to train with:</p>
+        <div class="radio-group">
+          <label class="radio-card">
+            <input type="radio" name="preference" value="park" checked>
+            <span class="radio-content">
+              <strong>Park facilities</strong>
+              <small>Running track, rotational equipment, outdoor circuits</small>
+            </span>
+          </label>
+          <label class="radio-card">
+            <input type="radio" name="preference" value="calisthenics">
+            <span class="radio-content">
+              <strong>Calisthenics / equipment</strong>
+              <small>Bodyweight & optional gym equipment</small>
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-primary" id="btn-generate">Generate my plan</button>
+
+      <div class="plan-output hidden" id="plan-output">
+        <h3>Your personalized plan</h3>
+        <div class="plan-summary" id="plan-summary"></div>
+        <div class="plan-details" id="plan-details"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>FitTrack — Move more, feel better. Youth College International.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
